@@ -1,0 +1,7 @@
+Simple rest api server with only one endpoint /api/get/helloworld which returns "Hello World" message
+In order to run the server you should have python installed
+Also you need to install python external packages:
+pip install -r requirements.txt
+
+Run command:
+python app.py
