@@ -25,7 +25,7 @@ class Base(DeclBase):
         return g.db.query(cls).filter_by(name=name).first()
 
 
-class Author(Base):
+class Author(DeclBase, Base):
     __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
     name = Column(String(collation='utf8'),
@@ -38,7 +38,7 @@ class Author(Base):
         return '<Author object %s>' % self.name
 
 
-class Book(Base):
+class Book(DeclBase, Base):
     __tablename__ = 'book'
     id = Column(Integer, primary_key=True)
     name = Column(String(collation='utf8'),
