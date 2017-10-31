@@ -1,7 +1,93 @@
-Simple rest api server with only one endpoint /api/get/helloworld which returns "Hello World" message
-In order to run the server you should have python installed
-Also you need to install python external packages:
-pip install -r requirements.txt
+### Book library Rest API service
 
-Run command:
-python app.py
+## Python 3.4.3 - PostgreSQL 9.4 - Flask 0.12.2
+
+**NOTE: EACH TIME YOU CREATE OR MODIFY DB MODELS, PLEASE CREATE NEW REVISION FILE AND COMMIT IT TO GIT**
+
+**Installation instructions:**
+
+1. Install python
+   * sudo add-apt-repository ppa:fkrull/deadsnakes
+   * sudo apt-get update
+   * sudo apt-get install python3.4
+   * sudo apt-get install python-dev
+1. Install postgres
+   * sudo add-apt-repository "deb https://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+   * wget --quiet -O - https://postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+   * sudo apt-get update
+   * sudo apt-get install postgresql-9.4
+1. Create db user and database
+1. Install pip
+   * sudo apt-get install pip3
+1. Install psycopg2 dependencies
+   * sudo apt-get install libpq-dev
+1. Install application python requirements
+   * pip install -r requirements.txt
+1. Change sqlalchemy.url in alembic.ini file according to server configuration
+1. Add project path to PYTHONPATH:
+   * export PYTHONPATH=$PYTHONPATH:<path_to_project>
+1. Create/upgrade tables for database via alembic:
+   * alembic --config='/path/to/config/file' upgrade head
+
+**COMMANDS FOR ALEMBIC:**
+1. Create new revision
+   * alembic --config '/path/to/config/file' revision --autogenerate -m 'revision description'
+1. Upgrade your db according revision
+   * alembic --config='/path/to/config/file' upgrade head|revision_id
+
+Supported endpoints:
+
+1: List all books
+PATH: /api/books
+METHOD: GET
+Response example:
+{"books":
+[{"id":some_id,
+"name":"some_book_name_1",
+"author":"some_author_1",
+"published":"01.01.2011",
+"price":99.99},],
+"error": false}
+
+2: Get book by name
+PATH: /api/books/<string:title>
+METHOD: GET
+Response example:
+{"book":{"id":some_id_1,
+"name":"some_book_name_1",
+"author":"some_author_1",
+"published":"01.01.2011",
+"price":99.99},
+"error":false}
+
+3: Create new book
+PATH: /api/books
+METHOD: POST
+BODY FIELDS:
+name="some_book_name_1"  string
+author="some_author_1"   string
+published=1509444687     int (TIMESTAMP)
+price=99.99              float
+Response example:
+{"id":created_id,
+"error":false}
+
+4: Update book price
+PATH: /api/books/<string:title>
+METHOD: PUT
+BODY FIELDS:
+price=100.0              float
+Response example:
+{"id":updated_id,
+"error":false}
+
+5: Delete book
+PATH: /api/books/<string:title>
+METHOD: DELETE
+Response example:
+{"id":deleted_id,
+"error":false}
+
+Handle errors:
+If there is an error, the server will return json in following format:
+{"error":true, "message":"Not found", code:404}
