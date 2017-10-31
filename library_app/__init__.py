@@ -17,18 +17,9 @@ app.config.update(dict(
         app.config.get('DB_PASSWORD'), app.config.get('DB_NAME'))))
 
 
-@app.errorhandler(404)
-def error_404(err):
-    return json_response(err=True, message='Not found', code=404)
-
-
-@app.errorhandler(400)
-def error_404(err):
-    return json_response(err=True, message='Bad request', code=400)
-
-
-def load_db_session(db_url):
-    engine = create_engine(db_url,
+@app.before_request
+def load_db_session():
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
                            echo=False)
     sql_connection = engine.connect()
     db_session = scoped_session(sessionmaker(autocommit=False,
@@ -38,5 +29,14 @@ def load_db_session(db_url):
     g.db_connection = sql_connection
     g.engine = engine
 
+
+@app.errorhandler(404)
+def error_404(err):
+    return json_response(err=True, message='Not found', code=404)
+
+
+@app.errorhandler(400)
+def error_404(err):
+    return json_response(err=True, message='Bad request', code=400)
 
 from library_app import endpoint

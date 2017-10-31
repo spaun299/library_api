@@ -5,10 +5,10 @@ from sqlalchemy import Column, Integer, ForeignKey, \
 from flask import g
 from utils import timestamp_to_date
 
-DeclBase = declarative_base()
+Base = declarative_base()
 
 
-class Base(DeclBase):
+class BaseMix:
     def save(self):
         g.db.add(self)
         g.db.commit()
@@ -25,10 +25,10 @@ class Base(DeclBase):
         return g.db.query(cls).filter_by(name=name).first()
 
 
-class Author(DeclBase, Base):
+class Author(Base, BaseMix):
     __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
-    name = Column(String(collation='utf8'),
+    name = Column(String,
                   nullable=False, unique=True)
 
     def __init__(self, name=None):
@@ -38,15 +38,15 @@ class Author(DeclBase, Base):
         return '<Author object %s>' % self.name
 
 
-class Book(DeclBase, Base):
+class Book(Base, BaseMix):
     __tablename__ = 'book'
     id = Column(Integer, primary_key=True)
-    name = Column(String(collation='utf8'),
+    name = Column(String,
                   nullable=False, unique=True)
     publish_date = Column(TIMESTAMP, nullable=False)
     price = Column(Float, nullable=False)
     author_id = Column(Integer, ForeignKey('author.id'), nullable=False)
-    author = relationship('Author', back_populates='books')
+    author = relationship('Author', backref='books')
 
     def __init__(self, name=None, publish_date=None, price=None,
                  author=None):
