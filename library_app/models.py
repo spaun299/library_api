@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, ForeignKey, \
     String, TIMESTAMP, Float
 from flask import g
-from utils import timestamp_to_date
 
 Base = declarative_base()
 
@@ -64,6 +63,6 @@ class Book(Base, BaseMix):
 
     def book_to_dict(self):
         return {'id': self.id, 'name': self.name,
-                'published': timestamp_to_date(self.publish_date),
+                'published': self.publish_date,
                 'price': self.price,
                 'author': self.author.name}

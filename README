@@ -63,7 +63,8 @@ Response example:
 3: Create new book
 PATH: /api/books
 METHOD: POST
-BODY FIELDS:
+Authentication: Basic (getting from config)
+BODY JSON FIELDS:
 name="some_book_name_1"  string
 author="some_author_1"   string
 published=1509444687     int (TIMESTAMP)
@@ -75,7 +76,8 @@ Response example:
 4: Update book price
 PATH: /api/books/<string:title>
 METHOD: PUT
-BODY FIELDS:
+Authentication: Basic (getting from config)
+BODY JSON FIELDS:
 price=100.0              float
 Response example:
 {"id":updated_id,
@@ -84,6 +86,7 @@ Response example:
 5: Delete book
 PATH: /api/books/<string:title>
 METHOD: DELETE
+Authentication: Basic (getting from config)
 Response example:
 {"id":deleted_id,
 "error":false}

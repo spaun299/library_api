@@ -1,9 +1,12 @@
 from flask import jsonify
 import datetime
+import logging
 
 
 def json_response(err=False, **kwargs):
     kwargs.update(dict(err=True if err else False))
+    if err and kwargs.get('message'):
+        logging.debug(kwargs['message'])
     return jsonify(kwargs)
 
 
